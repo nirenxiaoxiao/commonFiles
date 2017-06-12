@@ -1,0 +1,16 @@
+[Version]
+signature=¡±$CHICAGO$¡±
+AdvancedINF=2.0
+
+[Add.Code]
+DocEditHelper.dll=DocEditHelper.dll
+DocEditHelper.inf=DocEditHelper.inf
+
+[DocEditHelper.dll]
+File-win32-x86=thiscab
+RegisterServer=yes
+clsid={24968842-CA13-46E6-A6FE-81DFA5285087}
+FileVersion=1,0,0,1
+
+[DocEditHelper.inf]
+file=thiscab

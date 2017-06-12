@@ -1,0 +1,86 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+    <title>对象 DocumentEditHelper 的 ATL 测试页</title>
+    <style type="text/css">
+        #DocumentEditHelper {
+            height: 0px;
+            width: 0px;
+        }
+
+        #url_input {
+            width: 694px;
+        }
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+        function OpenDocument(url) {
+            var helper = document.getElementById('DocumentEditHelper');
+            var docID = helper.LoadDocument(url);
+            LogText('LoadDocument' + 'URL=[' + url + '] id=[' + docID + ']');
+        }
+        function LogText(text) {
+            var line = document.createElement('div');
+            line.innerHTML = text.toString() + '<br/>';
+            document.getElementById('log_container').appendChild(line);
+        }
+        function ClearLog(){
+            document.getElementById('log_container').innerHTML = '';
+        }
+        function OnDownloadProgress(url, id, downloadBytes, totalBytes) {
+            var log = 'Downloading URL [' + url + '] id='+ id + ' (' + downloadBytes + '/' + totalBytes + ')';
+            //LogText(log);
+        }
+        function OnDownloadBegin(url, id) {
+            var log = 'Begin downloading URL [' + url + '] id=' + id;
+            LogText(log);
+        }
+        function OnDownloadResult(url, id, errorCode, errorMsg) {
+            var log = 'Download result: URL: [' + url + '] id=' + id + ' errorCode=' + errorCode + ' errorMessage=' + errorMsg;
+            LogText(log);
+        }
+        function OnDocumentOpen(url, id, errorCode, errorMsg) {
+            var log = 'Document opened by local editor. URL: [' + url + '] id=' + id + ' errorCode=' + errorCode + ' errorMessage=' + errorMsg;
+            LogText(log);
+        }
+        function OnDocumentClosed(url, id) {
+            var log = 'Document closed. URL: [' + url + '] id=' + id;
+            LogText(log);
+        }
+        function OnDocumentModified(url, id) {
+            var log = 'Document modified. URL: [' + url + '] id=' + id;
+            LogText(log);
+        }
+    </script>
+
+    <h2>测试使用ActiveX控件用本地程序打开指定URL的文档</h2>
+    <p>
+        <input id="url_input" type="text" />
+        <input type="button" value="LoadURL" onclick="OpenDocument(url_input.value);" />
+    </p>
+    <object id="DocumentEditHelper" classid="CLSID:24968842-CA13-46E6-A6FE-81DFA5285087"></object>
+    <script for="DocumentEditHelper" event="OnDownloadProgress(url, id, downloadBytes, totalBytes)">
+        OnDownloadProgress(url, id, downloadBytes, totalBytes);
+    </script>
+    <script for="DocumentEditHelper" event="OnDownloadBegin(url, id)">
+        OnDownloadBegin(url, id);
+    </script>
+    <script for="DocumentEditHelper" event="OnDownloadResult(url, id, errorCode, errorMsg)">
+        OnDownloadResult(url, id, errorCode, errorMsg);
+    </script>
+    <script for="DocumentEditHelper" event="OnDocumentOpen(url, id, errorCode, errorMsg)">
+        OnDocumentOpen(url, id, errorCode, errorMsg);
+    </script>
+    <script for="DocumentEditHelper" event="OnDocumentClosed(url, id)">
+        OnDocumentClosed(url, id);
+    </script>
+    <script for="DocumentEditHelper" event="OnDocumentModified(url, id)">
+        OnDocumentModified(url, id);
+    </script>
+    <br />
+    <input type="button" value="ClearLog" onclick="ClearLog();" />
+    <div id="log_container">
+    </div>
+</body>
+</html>

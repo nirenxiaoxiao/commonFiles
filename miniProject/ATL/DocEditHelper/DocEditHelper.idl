@@ -1,0 +1,57 @@
+// DocEditHelper.idl : DocEditHelper的 IDL 源
+//
+
+// 此文件将由 MIDL 工具处理以
+// 产生类型库(DocEditHelper.tlb)和封送处理代码。
+
+#include "olectl.h"
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(4E328C99-C171-4192-B01C-681EB06BA89E),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface IDocumentEditHelper : IDispatch{
+    [id(1)] HRESULT LoadDocument([in] BSTR documentURL, [in] BSTR postURL, [out, retval] BSTR* docIdentifier);
+    [propget, id(2), helpstring("是否禁止多次打开相同URL的文档")] HRESULT DisableLoadDuplicateURL([out, retval] VARIANT_BOOL* pVal);
+    [propput, id(2), helpstring("是否禁止多次打开相同URL的文档")] HRESULT DisableLoadDuplicateURL([in] VARIANT_BOOL newVal);
+    [id(3), helpstring("检测是否已经打开了指定URL的文档。")] HRESULT IsDocumentLoaded([in] BSTR documentURL, [out, retval] VARIANT_BOOL* bLoaded);
+};
+
+[
+	uuid(9745A165-E1A5-4AE7-B06B-F6AEF93D377D),
+	version(1.0),
+]
+library DocEditHelperLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(CA57972C-2221-475B-A4EA-64C649C64DC0)		
+	]
+	dispinterface _IDocumentEditHelperEvents
+	{
+		properties:
+		methods:
+            [id(1), helpstring("called when download progress is updated")] void OnDownloadProgress([in] BSTR documentURL,[in] BSTR docIdentifier,[in] ULONG downloadBytes,[in] ULONG totalBytes);
+            [id(2), helpstring("called when download is going to begin")] void OnDownloadBegin([in] BSTR documentURL, [in] BSTR docIdentifier);
+            [id(3), helpstring("called when download operation got a result")] void OnDownloadResult([in] BSTR documentURL, [in] BSTR docIdentifier, [in] ULONG errorCode, [in] BSTR errorMsg);
+            [id(4), helpstring("called when document is modified")] void OnDocumentModified([in] BSTR documentURL, [in] BSTR docIdentifier);
+            [id(5), helpstring("called when document is opened by local editor")] void OnDocumentOpen([in] BSTR documentURL, [in] BSTR docIdentifier, [in] ULONG errorCode, [in] BSTR OpenResult);
+            [id(6), helpstring("called when the editor closed")] void OnDocumentClosed([in] BSTR documentURL, [in] BSTR docIdentifier);
+            [id(7), helpstring("test")] void OnTest([in] ULONG testValue);
+	};
+	[
+		uuid(24968842-CA13-46E6-A6FE-81DFA5285087),		
+		control
+	]
+	coclass DocumentEditHelper
+	{
+		[default] interface IDocumentEditHelper;
+		[default, source] dispinterface _IDocumentEditHelperEvents;
+	};
+};
+

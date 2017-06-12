@@ -1,0 +1,10 @@
+; cab文件打包信息
+
+.OPTION EXPLICIT
+;    CabinetNameTemplate is the name of the output CAB file:
+.Set CabinetNameTemplate=DocEditHelper.cab
+.Set DiskDirectoryTemplate=Deploy
+.Set Cabinet=on
+.Set Compress=on
+"Deploy\tmp\DocEditHelper.dll"
+"Deploy\tmp\DocEditHelper.inf" 

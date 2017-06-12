@@ -1,0 +1,32 @@
+HKCR
+{
+	DocEditHelper.DocumentEditHelper.1 = s 'DocumentEditHelper Class'
+	{
+		CLSID = s '{24968842-CA13-46E6-A6FE-81DFA5285087}'
+	}
+	DocEditHelper.DocumentEditHelper = s 'DocumentEditHelper Class'
+	{
+		CLSID = s '{24968842-CA13-46E6-A6FE-81DFA5285087}'
+		CurVer = s 'docEditHelper.DocumentEditHelper.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {24968842-CA13-46E6-A6FE-81DFA5285087} = s 'DocumentEditHelper Class'
+		{
+			ProgID = s 'DocEditHelper.DocumentEditHelper.1'
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			ForceRemove Control
+			ForceRemove 'ToolboxBitmap32' = s '%MODULE%, 208'
+			MiscStatus = s '0'
+			{
+			    '1' = s '%OLEMISC%'
+			}
+			TypeLib = s '{9745A165-E1A5-4AE7-B06B-F6AEF93D377D}'
+			Version = s '1.0'
+		}
+	}
+}
