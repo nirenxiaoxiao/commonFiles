@@ -17,9 +17,7 @@
     <script type="text/javascript">
         function OpenDocument(url) {
             var helper = document.getElementById('DocumentEditHelper');
-            var url = "http://172.16.193.65:8081/ypxt/pub/activex/downLoad?wsmc=11111.doc";
-            var erl = "http://172.16.193.65:8081/ypxt/pub/jaks/writeBackData?activeXID=wsid";
-            var docID = helper.LoadDocument(url,erl);
+            var docID = helper.LoadDocument(url);
             LogText('LoadDocument' + 'URL=[' + url + '] id=[' + docID + ']');
         }
         function LogText(text) {
@@ -61,7 +59,9 @@
         <input id="url_input" type="text" />
         <input type="button" value="LoadURL" onclick="OpenDocument(url_input.value);" />
     </p>
-    <object id="DocumentEditHelper" classid="CLSID:24968842-CA13-46E6-A6FE-81DFA5285087"></object>
+    <object id="DocumentEditHelper" 
+    classid="CLSID:24968842-CA13-46E6-A6FE-81DFA5285087"
+    codebase="DocEditHelper.cab#version=1,0,0,1"></object>
     <script for="DocumentEditHelper" event="OnDownloadProgress(url, id, downloadBytes, totalBytes)">
         OnDownloadProgress(url, id, downloadBytes, totalBytes);
     </script>

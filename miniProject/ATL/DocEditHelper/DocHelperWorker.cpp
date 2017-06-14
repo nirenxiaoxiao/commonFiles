@@ -242,7 +242,7 @@ void DocHelperWorker::DoMonitorDirChange(const wchar_t* dirPath)
             &nRet,// number of bytes returned
             &dirInfo.pollingOverlap,// pointer to structure needed for overlapped I/O
             NULL);
-
+		DebugLog("======================================result: [%d]", result);
         bool bStop = false;
         while (WaitForSingleObject(dirInfo.pollingOverlap.hEvent, 200) != WAIT_OBJECT_0)
         {
@@ -267,9 +267,10 @@ void DocHelperWorker::DoMonitorDirChange(const wchar_t* dirPath)
         {
             pNotify = reinterpret_cast<FILE_NOTIFY_INFORMATION*>(dirInfo.dirChangeBuffer.get() + offset);
 
-            std::wstring wFilename(pNotify->FileName, pNotify->FileNameLength);
+			std::wstring wFilename(pNotify->FileName, pNotify->FileNameLength / sizeof(wchar_t));
             std::string filename(UTF16ToANSI(wFilename));
-
+			DebugLog("======================================offeset: [%d]", offset);
+			DebugLog("======================================测试: [%s]", filename.c_str());
             switch (pNotify->Action)
             {
             case FILE_ACTION_MODIFIED:
@@ -318,6 +319,7 @@ void DocHelperWorker::CheckProcessRunning()
     {
         DWORD exitCode = 0;
         GetExitCodeProcess(docInfo->hProcess, &exitCode);
+		DebugLog("======================================code: [%f]", exitCode);
         if (exitCode != STILL_ACTIVE)
         {
             closedDocuments.push_back(docInfo->documentId);
@@ -399,9 +401,11 @@ void DocHelperWorker::HandleMessage(UINT msg, WPARAM wParam, LPARAM lParam)
                 pInfo = info.get();
             }
         });
-
+		DebugLog("+++++++++++++++++++++++++++++++++++");
         if (pInfo)
         {
+			DebugLog("======================================postURL\"%s\" ", UTF16ToUTF8(pInfo->postURL).c_str());
+			DebugLog("======================================filepath\"%s\" ", UTF16ToUTF8(pInfo->documentLocalPath).c_str());
           map<string,string> params;
 		  params["aaaa"] = "aaaa";
 		  FileDownloader::getInstance()->PostHttpRequest(UTF16ToANSI(pInfo->postURL).c_str(), UTF16ToANSI(pInfo->documentLocalPath).c_str(), params, [](string &response){DebugLog("%s", response.c_str()); });
@@ -456,13 +460,16 @@ bool DocHelperWorker::DoLoadDocument(AddDocFileInfo* pInfo)
     {
         std::wstring name, ext;
         SplitFileName(filename, name, ext);
-        std::wstring saveFilename = name + L"_" + identifier + L"." + ext;
+		std::wstring saveFilename = name + L"_" + identifier + L"." +ext;
         return std::move(saveFilename);
     };
 
     // TODO: 只允许下载指定的文件类型
-
-    std::wstring saveFilePath = m_workDir + L"\\" + BuildSaveFilename(url.GetFileName(), id);
+	// TODO: caozeal业务需要，临时换成另一种解析方式，以后要考虑两种都兼容
+	wstring urlStr = url.GetURL();
+	int separator = urlStr.find_last_of(L"=");
+	wstring filename = urlStr.substr(separator + 1, urlStr.length());
+    std::wstring saveFilePath = m_workDir + L"\\" + BuildSaveFilename(filename, id);
 
     DebugLog("Begin download Document, URL=\"%s\"\n id=\"%s\"\n saveFilePath=\"%s\"",
         UTF16ToANSI(pInfo->documentURL).c_str(), UTF16ToANSI(id).c_str(), UTF16ToANSI(saveFilePath).c_str());
@@ -486,7 +493,9 @@ bool DocHelperWorker::DoLoadDocument(AddDocFileInfo* pInfo)
 
     // 尝试打开该文档
     SHELLEXECUTEINFOW executeInfo = { 0 };
+	executeInfo.hwnd = NULL;
     executeInfo.cbSize = sizeof(SHELLEXECUTEINFOW);
+	executeInfo.lpVerb = _T("open");
     executeInfo.fMask = SEE_MASK_DEFAULT | SEE_MASK_NOCLOSEPROCESS;
     executeInfo.lpFile = saveFilePath.c_str();
     executeInfo.nShow = SW_SHOW;

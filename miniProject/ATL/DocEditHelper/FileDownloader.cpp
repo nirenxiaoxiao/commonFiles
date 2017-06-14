@@ -294,8 +294,8 @@ bool FileDownloader::IsDownloadRunning()
 //post请求
 int  FileDownloader::PostHttpRequest(const string & strUrl, const string & filePath, map<string, string>params, SuccessFinishedCallBack callback)
 {
-	DebugLog("========================postUrl:%s", strUrl);
-	DebugLog("========================filePath:%s", filePath);
+	DebugLog("========================postUrl:%s", strUrl.c_str());
+	DebugLog("========================filePath:%s", filePath.c_str());
 	string strResponse;//返回数据
 	int progress = 0;
 	CURL * curl;
@@ -342,14 +342,20 @@ int  FileDownloader::PostHttpRequest(const string & strUrl, const string & fileP
 	curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, progress);//进度数据
 	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10);//连接时间
 	res = curl_easy_perform(curl);
-	DebugLog("========================filePath:%d", res);
+	DebugLog("========================res:%d", res);
 	if (res == CURLE_OK) {
+		DebugLog("========================res:%d", res);
 		callback(strResponse);
 	}
+	DebugLog("========================res:%d", res);
 	curl_global_cleanup();
+	DebugLog("========================res:%d", res);
 	curl_easy_cleanup(curl);
+	DebugLog("========================res:%d", res);
 	curl_formfree(post);
+	DebugLog("========================res:%d", res);
 	curl_slist_free_all(headers);
+	DebugLog("========================res:%d", res);
 	return res;
 }
 

@@ -28,7 +28,7 @@ STDMETHODIMP CDocumentEditHelper::LoadDocument(BSTR documentURL, BSTR postURL, B
 
     std::wstring id = m_pWorker->LoadDocument(url.c_str(),postUrl.c_str());
 
-	DebugLog("CDocumentEditHelper::LoadDocument - documentURL1 = \"%s\"", UTF16ToUTF8(url).c_str());
+	DebugLog("CDocumentEditHelper::LoadDocument - postUrl = \"%s\"", UTF16ToUTF8(postUrl).c_str());
     *docIdentifier = ::SysAllocString(id.c_str());
 	DebugLog("CDocumentEditHelper::LoadDocument - documentURL2 = \"%s\"", UTF16ToUTF8(url).c_str());
     return S_OK;
