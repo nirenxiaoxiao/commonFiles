@@ -1,0 +1,44 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caozeal.Mapper">
+	<resultMap id="tLogIpMap" type="tLogIp">
+	    <constructor>
+	       <idArg column="C_BH" javaType="String" />
+	       <arg column="N_YWLX" javaType="Integer" />
+	    </constructor>
+<!-- 		<id property="CBh" column="C_BH" />
+		<result property="CIp" column="C_IP" />
+		<result property="CAddr" column="C_ADDR" />
+		<result property="NYwlx" column="N_YWLX" />
+		<result property="CYwlx" column="C_YWLX" />
+		<result property="CYwid" column="C_YWID" />
+		<result property="CYsfyId" column="C_YSFY_ID" />
+		<result property="CYsfyName" column="C_YSFY_NAME" />
+		<result property="CJbfyId" column="C_JBFY_ID" />
+		<result property="CJbfyName" column="C_JBFY_NAME" />
+		<result property="DJlsj" column="D_JLSJ" /> -->
+	</resultMap>
+
+    <select id="selectIp0" resultType="tLogIp">
+        SELECT * FROM T_LOG_IP WHERE C_JBFY_ID = #{cJbfyId} LIMIT 1
+    </select>
+    
+	<select id="selectIp1" resultMap="tLogIpMap">
+		SELECT C_BH,N_YWLX FROM T_LOG_IP WHERE C_JBFY_ID = #{cJbfyId} LIMIT 1
+	</select>
+	
+	<select id="selectIp2" resultType="String">
+        SELECT C_BH FROM T_LOG_IP WHERE C_JBFY_ID = #{cJbfyId}
+    </select>
+    
+    <resultMap type="layyIpLog" id="layyIpLogMap">
+        <id property="ip" column="C_IP"/>
+        <association property="layy" javaType="tLayy" autoMapping="true">
+        </association>
+    </resultMap>
+    
+    <select id="selectOneLayyIpLog" resultMap="layyIpLogMap">
+        SELECT LOGIP.C_IP,LAYY.* FROM SUSONG51_LAYY.T_LAYY LAYY,SUSONG51.T_LOG_IP LOGIP WHERE LOGIP.C_YWID = LAYY.C_ID LIMIT 1
+    </select>
+</mapper>
